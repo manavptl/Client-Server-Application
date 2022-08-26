@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Jainam Shah">
+    <meta name="author" content="Vaibhavi Mistri">
+    <meta name="author" content="Nidhi Bhatt">
+    <meta name="author" content="Manav Patel">
+    <meta name="keywords" content="Chat Website, Chat Application, Client Server Chat Application">
+    <title>Register</title>
+
+    <style>
+        #verifier {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="sender">
+            <pre>
+                <label for="profilePicture">Profile Picture</label> <input type="file" id="profilePicture">
+                <label for="mobileNumber">Mobile Number</label> <input type="tel" id="mobileNumber">
+                <label for="firstName">First Name</label> <input type="text" id="firstName">
+                <label for="lastName">Last Name</label> <input type="text" id="lastName">
+                <label for="password">Password</label> <input type="text" id="password">
+                <label for="ConfirmPassword">Confirm Password</label> <input type="text" id="ConfirmPassword">
+                <div id="reCaptcha"></div>
+                <button onclick="processChecker()">Register</button>
+            </pre>
+        </div>
+
+        <div id="verifier">
+            <label for="otp">OTP</label> <input type="text" id="otp">
+            <button onclick="codeVerify()">Submit</button>
+        </div>
+    </div>
+</body>
+<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
+<script src="../JavaScript/register.js"></script>
+
+</html>
