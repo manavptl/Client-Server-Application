@@ -11,25 +11,26 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-function isUser() {
-    var mobileNumber = document.getElementById('mobileNumber').value;
-    var password = document.getElementById('password').value;
-
+function deleteAccount() {
+    var mobileNumber = sessionStorage.getItem('User');
+    var password = window.prompt('Enter your password');
+    document.write(mobileNumber);
+    document.write("checkpoint 1");
     var user = db.ref();
     user.child("UserInformation").child(mobileNumber).get().then((snapshot) => {
         if (snapshot.exists()) {
             var dbPassword = snapshot.val().Password;
             if (password == dbPassword) {
-                sessionStorage.setItem('User', String(mobileNumber));
-                window.location.href = "http://localhost/Client-Server-Application/HTML/home.html";
+                snapshot.ref.remove();
             }
             else {
-                alert('password to sacho loko yarrr');
+                alert('Incorrect Password Account Can not be deleted');
             }
         }
         else {
-            alert('User does not exists please register to application');
+            alert('Error in fetching your data');
         }
+        document.write("checkpoint 2");
     }).catch((error) => {
         alert('error' + error);
     });
