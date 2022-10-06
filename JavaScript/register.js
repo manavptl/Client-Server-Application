@@ -54,8 +54,13 @@ function codeVerify() {
             FirstName: firstName,
             LastName: lastName,
             Password: password
+        }).then(() => {
+            alert("Signin successful");
+            window.close();
+            window.location.href = "http://localhost/Client-Server-Application/index.html";
+        }).catch((error) => {
+            alert("catch" + error);
         });
-        window.location.href = "http://localhost/Client-Server-Application/index.html";
     }).catch(function (error) {
         alert('error');
     });

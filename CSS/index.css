@@ -2,7 +2,7 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    background-color: #959d85;
+    background-color: #b4a3af;
 }
 
 .container {
@@ -20,17 +20,15 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 25rem;
-    height: 25rem;
-    background-color: #5B8A72;
-    border: 2px solid #275b40;
-    border-radius: 1rem;
-    /*  box-shadow: #2C3333 0px 19px 38px, #2C3333 0px 15px 12px; */
+    width: 22rem;
+    height: 22rem;
+    background-color: #3f173d;
+    border-radius: 3rem;
 }
 
 input {
     background: none;
-    background-color: #464F41;
+    background-color: #815d6b;
     width: 15rem;
     height: 3rem;
     margin-bottom: 1rem;
@@ -38,7 +36,12 @@ input {
     border-radius: 8px;
     outline: none;
     text-indent: 1.3rem;
-    color: #BFCBA8;
+    color: white;
+
+}
+
+::placeholder{
+    color: rgb(205, 200, 200);
 }
 
 a {
@@ -47,12 +50,13 @@ a {
 }
 
 #forgotPassword {
-    color: #BFCBA8;
+    color: rgb(205, 200, 200);
     position: relative;
-    left: -15%;
+    left: -22%;
     text-decoration: none;
     margin-bottom: 1rem;
     float: right;
+    font-size: 11px;
 }
 
 .buttons {
@@ -64,24 +68,31 @@ a {
 }
 
 button {
-    width: 8rem;
-    height: 4rem;
+    width: 5rem;
+    height: 3rem;
     border: none;
     border-radius: 10px;
-    background-color: #464F41;
-    color: #BFCBA8;
+    background-color: #815d6b;
+    color: rgb(205, 200, 200);
     position: relative;
     /* top: 20%; */
-    font-size: larger;
+    font-size: 12px;
 }
 
 .register:hover,
 .login:hover {
-    width: 8.5rem;
-    height: 4.5rem;
+    width: 5.5rem;
+    height: 3.5rem;
     cursor: pointer;
+    font-weight: bold;
 }
 
 #forgotPassword:hover {
     text-decoration-line: underline;
+    font-weight: bolder;
 }
+
+
+
+/* #3f173d bg color
+   #815d6b input box color , button color*/

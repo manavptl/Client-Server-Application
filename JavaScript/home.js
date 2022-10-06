@@ -35,3 +35,26 @@ function deleteAccount() {
         alert('error' + error);
     });
 }
+function updatePassword() {
+    var mobileNumber = sessionStorage.getItem('User');
+    var password = window.prompt('Enter your current password');
+    var user = db.ref();
+    user.child("UserInformation").child(mobileNumber).get().then((snapshot) => {
+        if (snapshot.exists()) {
+            var dbPassword = snapshot.val().Password;
+            if (password == dbPassword) {
+                var newPassword = window.prompt('Enter your new Password');
+                db.ref("UserInformation/" + mobileNumber).update({ Password: newPassword });
+                alert('Password Updated Successfully');
+            }
+            else {
+                alert('Incorrect Password for your Account');
+            }
+        }
+        else {
+            alert('Error in fetching your data');
+        }
+    }).catch((error) => {
+        alert('error' + error);
+    });
+}
