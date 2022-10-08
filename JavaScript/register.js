@@ -1,12 +1,6 @@
-const firebaseConfig = {
-    apiKey: "AIzaSyCezzXXeWlzvPPt5W_M9nX95w_fQVQms88",
-    authDomain: "client-server-applicatio-a899f.firebaseapp.com",
-    databaseURL: "https://client-server-applicatio-a899f-default-rtdb.firebaseio.com",
-    projectId: "client-server-applicatio-a899f",
-    storageBucket: "client-server-applicatio-a899f.appspot.com",
-    messagingSenderId: "813097380985",
-    appId: "1:813097380985:web:b2f9f08b3c3444e428b8a8"
-};
+import {firebaseConfig} from './database.js';
+import {encrypt} from './encryptDecrypt.js';
+import {index_html} from './locationUrls.js';
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
@@ -18,14 +12,34 @@ function render() {
     recaptchaVerifier.render();
 }
 
+const register = document.getElementById("register");
+register.addEventListener("click", processChecker);
+
+const otpSubmit = document.getElementById("otpSubmit");
+otpSubmit.addEventListener("click", codeVerify);
+
+var coderesult;
+
 function processChecker() {
+    var mobileNumber = document.getElementById('mobileNumber').value;
     var password = document.getElementById('password').value;
     var confirmPassword = document.getElementById('ConfirmPassword').value;
     if (passwordValidation(password, confirmPassword)) {
-        phoneAuthencation();
+        var user = db.ref();
+        user.child("UserInformation").child(mobileNumber).get().then((snapshot) => {
+            if (snapshot.exists()) {
+                alert('Already Exists User Try to Login');
+                location.replace(`${index_html}`);
+            }
+            else {
+                phoneAuthencation();
+            }
+        }).catch((error) => {
+            alert('error' + error);
+        });
     }
     else {
-        alert('password and confirm password are not matching');
+        alert('Password and Confirm Password are not matching');
     }
 }
 
@@ -33,12 +47,14 @@ function phoneAuthencation() {
     var mobileNumber = document.getElementById('mobileNumber').value;
     firebase.auth().signInWithPhoneNumber(mobileNumber, window.recaptchaVerifier).then(function (confirmationResult) {
         window.confirmationResult = confirmationResult;
+        console.log(confirmationResult);
         coderesult = confirmationResult;
         document.getElementById('sender').style.display = 'none';
         document.getElementById('verifier').style.display = 'block';
     }).catch(function (error) {
         alert('error' + error);
     });
+    console.log("phoneAuthencation over");
 }
 
 function codeVerify() {
@@ -48,16 +64,16 @@ function codeVerify() {
         var firstName = document.getElementById('firstName').value;
         var lastName = document.getElementById('lastName').value;
         var password = document.getElementById('password').value;
+        var encryptedPassword = encrypt(password);
 
         db.ref("UserInformation/" + mobileNumber).set({
             MobileNumber: mobileNumber,
             FirstName: firstName,
             LastName: lastName,
-            Password: password
+            Password: encryptedPassword
         }).then(() => {
-            alert("Signin successful");
-            window.close();
-            window.location.href = "http://localhost/Client-Server-Application/index.html";
+            alert("Registration successful");
+            location.replace(`${index_html}`);
         }).catch((error) => {
             alert("catch" + error);
         });

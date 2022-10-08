@@ -1,15 +1,12 @@
-const firebaseConfig = {
-    apiKey: "AIzaSyCezzXXeWlzvPPt5W_M9nX95w_fQVQms88",
-    authDomain: "client-server-applicatio-a899f.firebaseapp.com",
-    databaseURL: "https://client-server-applicatio-a899f-default-rtdb.firebaseio.com",
-    projectId: "client-server-applicatio-a899f",
-    storageBucket: "client-server-applicatio-a899f.appspot.com",
-    messagingSenderId: "813097380985",
-    appId: "1:813097380985:web:b2f9f08b3c3444e428b8a8"
-};
+import { firebaseConfig } from './database.js';
+import { decrypt } from './encryptDecrypt.js';
+import { register_html,home_html } from './locationUrls.js';
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+
+const login = document.getElementById("login");
+login.addEventListener("click", isUser);
 
 function isUser() {
     var mobileNumber = document.getElementById('mobileNumber').value;
@@ -19,16 +16,19 @@ function isUser() {
     user.child("UserInformation").child(mobileNumber).get().then((snapshot) => {
         if (snapshot.exists()) {
             var dbPassword = snapshot.val().Password;
-            if (password == dbPassword) {
+            var decryptedPassword = decrypt(dbPassword);
+
+            if (password == decryptedPassword) {
                 sessionStorage.setItem('User', String(mobileNumber));
-                window.location.href = "http://localhost/Client-Server-Application/HTML/home.html";
+                location.replace(`${home_html}`);
             }
             else {
-                alert('password to sacho loko yarrr');
+                alert('Incorrect Password, Try Again!');
             }
         }
         else {
             alert('User does not exists please register to application');
+            location.replace(`${register_html}`);
         }
     }).catch((error) => {
         alert('error' + error);
