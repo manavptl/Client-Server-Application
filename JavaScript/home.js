@@ -1,9 +1,7 @@
-import {firebaseConfig} from './database.js';
-import {encrypt} from './encryptDecrypt.js';
-import {register_html,index_html} from './locationUrls.js';
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+import { db } from './database.js';
+import { encrypt } from './encryptDecrypt.js';
+import { register_html, index_html } from './locationUrls.js';
+import { numberFormate } from './utilities.js';
 
 const deleteAccount = document.getElementById("deleteAccount");
 deleteAccount.addEventListener("click", deleteUserAccount);
@@ -16,9 +14,10 @@ logout.addEventListener("click", logoutUser);
 
 function deleteUserAccount() {
     var mobileNumber = sessionStorage.getItem('User');
+    var formatedMobileNumber = numberFormate(mobileNumber);
     var password = window.prompt('Enter your password');
     var user = db.ref();
-    user.child("UserInformation").child(mobileNumber).get().then((snapshot) => {
+    user.child("UserInformation").child(formatedMobileNumber).get().then((snapshot) => {
         if (snapshot.exists()) {
             var dbPassword = snapshot.val().Password;
             var encryptedPassword = encrypt(password);
@@ -46,16 +45,17 @@ function deleteUserAccount() {
 
 function updateUserPassword() {
     var mobileNumber = sessionStorage.getItem('User');
+    var formatedMobileNumber = numberFormate(mobileNumber);
     var password = window.prompt('Enter your current password');
     var user = db.ref();
-    user.child("UserInformation").child(mobileNumber).get().then((snapshot) => {
+    user.child("UserInformation").child(formatedMobileNumber).get().then((snapshot) => {
         if (snapshot.exists()) {
             var dbPassword = snapshot.val().Password;
             var encryptedPassword = encrypt(password);
             if (encryptedPassword == dbPassword) {
                 var newPassword = window.prompt('Enter your new Password');
                 var newEncryptedPassword = encrypt(newPassword);
-                db.ref("UserInformation/" + mobileNumber).update({ Password: newEncryptedPassword });
+                db.ref("UserInformation/" + formatedMobileNumber).update({ Password: newEncryptedPassword });
                 alert('Password Updated Successfully');
             }
             else {

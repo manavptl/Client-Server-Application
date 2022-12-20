@@ -1,9 +1,8 @@
-import {firebaseConfig} from './database.js';
-import {encrypt} from './encryptDecrypt.js';
-import {index_html} from './locationUrls.js';
+import { db } from './database.js';
+import { encrypt } from './encryptDecrypt.js';
+import { index_html } from './locationUrls.js';
+import { numberFormate } from './utilities.js';
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
 firebase.auth().languageCode = 'EN';
 render();
 
@@ -22,11 +21,12 @@ var coderesult;
 
 function processChecker() {
     var mobileNumber = document.getElementById('mobileNumber').value;
+    var formatedMobileNumber = numberFormate(mobileNumber);
     var password = document.getElementById('password').value;
     var confirmPassword = document.getElementById('ConfirmPassword').value;
     if (passwordValidation(password, confirmPassword)) {
         var user = db.ref();
-        user.child("UserInformation").child(mobileNumber).get().then((snapshot) => {
+        user.child("UserInformation").child(formatedMobileNumber).get().then((snapshot) => {
             if (snapshot.exists()) {
                 alert('Already Exists User Try to Login');
                 location.replace(`${index_html}`);
@@ -45,32 +45,34 @@ function processChecker() {
 
 function phoneAuthencation() {
     var mobileNumber = document.getElementById('mobileNumber').value;
-    firebase.auth().signInWithPhoneNumber(mobileNumber, window.recaptchaVerifier).then(function (confirmationResult) {
+    var formatedMobileNumber = numberFormate(mobileNumber);
+    firebase.auth().signInWithPhoneNumber(formatedMobileNumber, window.recaptchaVerifier).then(function (confirmationResult) {
         window.confirmationResult = confirmationResult;
-        console.log(confirmationResult);
         coderesult = confirmationResult;
         document.getElementById('sender').style.display = 'none';
         document.getElementById('verifier').style.display = 'block';
     }).catch(function (error) {
         alert('error' + error);
     });
-    console.log("phoneAuthencation over");
 }
 
 function codeVerify() {
     var code = document.getElementById('otp').value;
     coderesult.confirm(code).then(function () {
         var mobileNumber = document.getElementById('mobileNumber').value;
+        var formatedMobileNumber = numberFormate(mobileNumber);
         var firstName = document.getElementById('firstName').value;
         var lastName = document.getElementById('lastName').value;
         var password = document.getElementById('password').value;
         var encryptedPassword = encrypt(password);
 
-        db.ref("UserInformation/" + mobileNumber).set({
-            MobileNumber: mobileNumber,
+        db.ref("UserInformation/" + formatedMobileNumber).set({
+            MobileNumber: formatedMobileNumber,
             FirstName: firstName,
             LastName: lastName,
-            Password: encryptedPassword
+            Password: encryptedPassword,
+            TotalFriend: 0,
+            PendingFriendRequest: 0
         }).then(() => {
             alert("Registration successful");
             location.replace(`${index_html}`);

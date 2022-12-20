@@ -1,9 +1,8 @@
-import {firebaseConfig} from './database.js';
-import {encrypt} from './encryptDecrypt.js';
-import {index_html} from './locationUrls.js';
+import { db } from './database.js';
+import { encrypt } from './encryptDecrypt.js';
+import { index_html } from './locationUrls.js';
+import { numberFormate } from './utilities.js';
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
 firebase.auth().languageCode = 'EN';
 render();
 
@@ -22,7 +21,8 @@ otpSubmit.addEventListener("click", codeVerify);
 
 function phoneAuthencation() {
     var mobileNumber = document.getElementById('mobileNumber').value;
-    firebase.auth().signInWithPhoneNumber(mobileNumber, window.recaptchaVerifier).then(function (confirmationResult) {
+    var formatedMobileNumber = numberFormate(mobileNumber);
+    firebase.auth().signInWithPhoneNumber(formatedMobileNumber, window.recaptchaVerifier).then(function (confirmationResult) {
         window.confirmationResult = confirmationResult;
         coderesult = confirmationResult;
         document.getElementById('sender').style.display = 'none';
@@ -35,10 +35,12 @@ function phoneAuthencation() {
 function codeVerify() {
     var code = document.getElementById('otp').value;
     var mobileNumber = document.getElementById('mobileNumber').value;
+    var formatedMobileNumber = numberFormate(mobileNumber);
+
     coderesult.confirm(code).then(function () {
         var updatedPassword = window.prompt('Enter your new password');
         var encryptedPassword = encrypt(updatedPassword);
-        db.ref("UserInformation/" + mobileNumber).update({
+        db.ref("UserInformation/" + formatedMobileNumber).update({
             Password: encryptedPassword
         }).then(() => {
             alert('Password Updated Successfully');
